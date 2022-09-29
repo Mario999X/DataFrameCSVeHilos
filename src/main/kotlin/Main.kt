@@ -1,20 +1,13 @@
 import controllers.ControllerAccidentes
+import controllers.ControllerDir
 import controllers.ControllerProducts
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
 
 fun main() {
 
     println("Ejecutando App \n")
 
     // Comprobacion del directorio
-    val workingDirectory: String = System.getProperty("user.dir")
-    val path = Paths.get(workingDirectory + File.separator + "data")
-
-    val isDir = Files.isDirectory(path)
-
-    if (!isDir) Files.createDirectory(path)
+    ControllerDir.comprobarDirData()
 
     // Ejecucion de los controladores
     ControllerProducts.procesarCopiaProductos()
