@@ -2,18 +2,23 @@ import controllers.ControllerAccidentes
 import controllers.ControllerDir
 import controllers.ControllerProducts
 
-fun main() {
+fun main(args: Array<String>) {
+
 
     println("Ejecutando App \n")
 
-    // Comprobacion del directorio
+    // --- Comprobacion del directorio ---
     ControllerDir.comprobarDirData()
 
-    // Ejecucion de los controladores
+    // --- Ejecucion de los controladores ---
     ControllerProducts.procesarCopiaProductos()
     ControllerAccidentes.procesarCopiasAccidentes()
 
     ControllerAccidentes.procesarConsultas()
+
+    // --- Ejecucion de los controladores (Hilos) ---
+    ControllerProducts.procesamientoHilos()
+    ControllerAccidentes.procesamientoHilos()
 
     println("Cerrando App")
 }

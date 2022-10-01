@@ -1,31 +1,33 @@
 package controllers
 
 import models.Accidente
+import models.LectorAccidentes
 import models.parse
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.writeCSV
 import java.io.File
+import kotlin.system.measureTimeMillis
 
 object ControllerAccidentes {
 
-    private val pathFile = "resources" + File.separator + "2022_Accidentalidad.csv"
-    private val workingDirectory: String = System.getProperty("user.dir")
     private val fs = File.separator
+    private val workingDirectory: String = System.getProperty("user.dir")
+    private val pathFile = workingDirectory + fs + "resources" + fs + "2022_Accidentalidad.csv"
 
     fun procesarCopiasAccidentes() {
 
         // Realizando directamente con el metodo readCSV de DataFrame da como resultado una lectura no precisa.
         // Esto puede servir para un csv enano, como en el caso de products.csv
-        val fileRead = DataFrame.readCSV(workingDirectory + fs + pathFile)
+        val fileRead = DataFrame.readCSV(pathFile)
         fileRead.cast<Accidente>()
 
         println("Realizando copia rapida accidentes")
         fileRead.writeCSV(workingDirectory + fs + "data" + fs + "copiaAccidentes.csv")
 
         // Por lo tanto, necesitamos precisar la lectura. Usamos el metodo creado en el modelo
-        val fileToRead = parse(File(workingDirectory + fs + pathFile))
+        val fileToRead = parse(File(pathFile))
         val castFile = fileToRead.toDataFrame()
         castFile.cast<Accidente>() // Aqui es opcional, no hacemos nada con ello.
 
@@ -33,8 +35,9 @@ object ControllerAccidentes {
         castFile.writeCSV(File(workingDirectory + fs + "data" + fs + "copiaAccidentesParse.csv"))
     }
 
+
     fun procesarConsultas() {
-        val fileToRead = parse(File(workingDirectory + fs + pathFile))
+        val fileToRead = parse(File(pathFile))
         val df = fileToRead.toDataFrame()
         df.cast<Accidente>()
 
@@ -48,9 +51,30 @@ object ControllerAccidentes {
         if (numCalle != null) {
             val primeraConsulta = df.filter { it["numero"] == numCalle }
 
-            primeraConsulta.writeCSV(File(workingDirectory + fs + "data" + fs + "ConsultaNumCalle$numCalle.csv"))
+            primeraConsulta.writeCSV(File(workingDirectory + fs + "data" + fs + "consultas" + fs + "ConsultaNumCalle$numCalle.csv"))
             println("Consulta numCalle $numCalle realizada")
         } else print("Error")
     }
 
+    // ---- HILOS ----
+    fun procesamientoHilos() {
+        procesarCSVHilosFijos()
+    }
+
+    private fun procesarCSVHilosFijos() {
+        val NUM_HILOS = 3
+
+        println("Procesando con hilos fijos: $NUM_HILOS")
+
+        measureTimeMillis {
+
+            val lectores = mutableListOf<Thread>()
+            repeat(NUM_HILOS) {
+                val lector = Thread(LectorAccidentes((File(pathFile))))
+                lectores.add(lector)
+                lector.start()
+            }
+            lectores.forEach { it.join() }
+        }.also { println("Tiempo: $it ms") }
+    }
 }
