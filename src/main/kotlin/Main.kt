@@ -6,14 +6,16 @@ fun main() {
 
     println("Ejecutando App \n")
 
-    // Comprobacion del directorio
+    // --- Comprobacion del directorio ---
     ControllerDir.comprobarDirData()
 
-    // Ejecucion de los controladores
+    // --- Ejecucion de los controladores ---
     ControllerProducts.procesarCopiaProductos()
     ControllerAccidentes.procesarCopiasAccidentes()
 
     ControllerAccidentes.procesarConsultas()
 
-    println("Cerrando App")
+    // --- Ejecucion de los controladores (Hilos) ---
+    ControllerProducts.procesamientoHilos()
+    ControllerAccidentes.procesamientoHilos()
 }
