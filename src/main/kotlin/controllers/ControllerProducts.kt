@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.writeCSV
 import java.io.File
+import java.util.concurrent.Executors
 import kotlin.system.measureTimeMillis
 
 object ControllerProducts {
@@ -28,10 +29,12 @@ object ControllerProducts {
     // --- HILOS ---
     fun procesamientoHilos() {
         procesarCSVHilosFijos()
+        procesarExecuteRunnable()
     }
 
     fun procesarCSVHilosFijos() {
         val NUM_HILOS = 3
+
         println("Procesando con hilos fijos: $NUM_HILOS")
 
         measureTimeMillis {
@@ -46,5 +49,28 @@ object ControllerProducts {
         }.also { println("Tiempo total: $it ms") }
     }
 
+    private fun procesarExecuteRunnable() {
+        val NUM_HILOS = 5
+
+        println("Procesando con una Thread Pool: $NUM_HILOS")
+
+        val lectores = mutableListOf<String>()
+        repeat((5..10).random()) {
+            lectores.add("Lector ${it + 1}")
+        }
+
+        println(lectores)
+
+        val executor = Executors.newFixedThreadPool(NUM_HILOS)
+        measureTimeMillis {
+            lectores.forEach { _ ->
+                executor.execute(Lector(File(pathFile)))
+            }
+            executor.shutdown()
+        }.also {
+            Thread.sleep(500)
+            println("Tiempo $it ms")
+        }
+    }
 
 }

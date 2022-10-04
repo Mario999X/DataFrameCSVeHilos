@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.writeCSV
 import java.io.File
+import java.util.concurrent.Executors
 import kotlin.system.measureTimeMillis
 
 object ControllerAccidentes {
@@ -46,23 +47,26 @@ object ControllerAccidentes {
         val numCalleMax = df.max("numero").toString()
         println("Numero maximo detectado: $numCalleMax")
         print("Introduzca un número existente: ")
-        val numCalle = readln().toIntOrNull()
+        val numCalle = readln().toLongOrNull()
 
         if (numCalle != null) {
-            val primeraConsulta = df.filter { it["numero"] == numCalle }
-
-            primeraConsulta.writeCSV(File(workingDirectory + fs + "data" + fs + "consultas" + fs + "ConsultaNumCalle$numCalle.csv"))
-            println("Consulta numCalle $numCalle realizada")
-        } else print("Error")
+            if (numCalle <= numCalleMax.toInt()) {
+                val primeraConsulta = df.filter { it["numero"] == numCalle }
+                // hadouken
+                primeraConsulta.writeCSV(File(workingDirectory + fs + "data" + fs + "consultas" + fs + "ConsultaNumCalle$numCalle.csv"))
+                println("Consulta numCalle $numCalle realizada")
+            } else println("Error numero maximo")
+        } else println("Error Null")
     }
 
     // ---- HILOS ----
     fun procesamientoHilos() {
         procesarCSVHilosFijos()
+        procesarExecuteRunnable()
     }
 
     private fun procesarCSVHilosFijos() {
-        val NUM_HILOS = 3
+        val NUM_HILOS = 5
 
         println("Procesando con hilos fijos: $NUM_HILOS")
 
@@ -77,4 +81,30 @@ object ControllerAccidentes {
             lectores.forEach { it.join() }
         }.also { println("Tiempo: $it ms") }
     }
+
+    private fun procesarExecuteRunnable() {
+        val NUM_HILOS = 5
+
+        println("Procesando con una Thread Pool: $NUM_HILOS")
+
+        val lectores = mutableListOf<String>()
+        repeat((5..10).random()) {
+            lectores.add("Lector ${it + 1}")
+        }
+
+        println(lectores)
+
+        val executor = Executors.newFixedThreadPool(NUM_HILOS)
+        measureTimeMillis {
+            lectores.forEach { _ ->
+                executor.execute(LectorAccidentes(File(pathFile)))
+            }
+            executor.shutdown()
+        }.also {
+            Thread.sleep(500)
+            println("Tiempo $it ms")
+        }
+    }
+
 }
+

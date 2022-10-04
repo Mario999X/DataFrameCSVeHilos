@@ -10,9 +10,9 @@ open class Lector(path: File) : Runnable {
     var fileCSV = DataFrame.readCSV(path)
 
     override fun run() {
-        println(Thread.currentThread().name)
+        //println(Thread.currentThread().name)
         println(fileCSV)
-        Thread.sleep(4000)
+
     }
 
 }
@@ -21,8 +21,7 @@ class LectorAccidentes(path: File) : Lector(path) {
 
     var fileCSV2 = parse(File(path.toString())).toDataFrame()
     override fun run() {
-        println(Thread.currentThread().name)
+        //println(Thread.currentThread().name)
         println(fileCSV2)
-        Thread.sleep(3000)
     }
 }

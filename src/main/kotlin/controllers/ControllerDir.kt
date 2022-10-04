@@ -6,7 +6,7 @@ import java.nio.file.Paths
 
 object ControllerDir {
 
-    fun comprobarDirData(){
+    fun comprobarDirData() {
         val fs = File.separator
         val workingDirectory: String = System.getProperty("user.dir")
         val pathData = Paths.get(workingDirectory + fs + "data")
@@ -15,7 +15,7 @@ object ControllerDir {
         val isDirData = Files.isDirectory(pathData)
         val isDirConsultas = Files.isDirectory(pathConsultas)
 
-        if (!isDirData) Files.createDirectory(pathData) + println("Directorio Creado")
-        if (!isDirConsultas) Files.createDirectory(pathConsultas) + println("Directorio Creado 2")
+        if (!isDirData) Files.createDirectory(pathData) + println("Directorio Creado $pathData")
+        if (!isDirConsultas) Files.createDirectory(pathConsultas) + println("Directorio Creado 2 $pathConsultas")
     }
 }

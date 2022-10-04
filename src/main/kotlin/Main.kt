@@ -2,8 +2,7 @@ import controllers.ControllerAccidentes
 import controllers.ControllerDir
 import controllers.ControllerProducts
 
-fun main(args: Array<String>) {
-
+fun main() {
 
     println("Ejecutando App \n")
 
@@ -19,6 +18,4 @@ fun main(args: Array<String>) {
     // --- Ejecucion de los controladores (Hilos) ---
     ControllerProducts.procesamientoHilos()
     ControllerAccidentes.procesamientoHilos()
-
-    println("Cerrando App")
 }
