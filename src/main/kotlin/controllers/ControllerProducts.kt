@@ -68,7 +68,6 @@ object ControllerProducts {
             }
             executor.shutdown()
         }.also {
-            Thread.sleep(500)
             println("Tiempo $it ms")
         }
     }

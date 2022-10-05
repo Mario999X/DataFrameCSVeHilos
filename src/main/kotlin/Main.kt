@@ -18,4 +18,6 @@ fun main() {
     // --- Ejecucion de los controladores (Hilos) ---
     ControllerProducts.procesamientoHilos()
     ControllerAccidentes.procesamientoHilos()
+
+    println("Cerrando App")
 }
