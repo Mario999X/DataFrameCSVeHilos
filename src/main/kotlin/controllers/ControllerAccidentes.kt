@@ -101,7 +101,6 @@ object ControllerAccidentes {
             }
             executor.shutdown()
         }.also {
-            Thread.sleep(500)
             println("Tiempo $it ms")
         }
     }
