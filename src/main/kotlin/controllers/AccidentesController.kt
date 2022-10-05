@@ -11,7 +11,7 @@ import java.io.File
 import java.util.concurrent.Executors
 import kotlin.system.measureTimeMillis
 
-object ControllerAccidentes {
+object AccidentesController {
 
     private val fs = File.separator
     private val workingDirectory: String = System.getProperty("user.dir")

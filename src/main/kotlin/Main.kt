@@ -1,23 +1,27 @@
-import controllers.ControllerAccidentes
-import controllers.ControllerDir
-import controllers.ControllerProducts
+import controllers.AccidentesController
+import controllers.DirController
+import controllers.FutureController
+import controllers.ProductsController
 
 fun main() {
 
     println("Ejecutando App \n")
 
     // --- Comprobacion del directorio ---
-    ControllerDir.comprobarDirData()
+    //DirController.comprobarDirData()
 
     // --- Ejecucion de los controladores ---
-    ControllerProducts.procesarCopiaProductos()
-    ControllerAccidentes.procesarCopiasAccidentes()
+    //ProductsController.procesarCopiaProductos()
+    //AccidentesController.procesarCopiasAccidentes()
 
-    ControllerAccidentes.procesarConsultas()
+    //AccidentesController.procesarConsultas()
 
     // --- Ejecucion de los controladores (Hilos) ---
-    ControllerProducts.procesamientoHilos()
-    ControllerAccidentes.procesamientoHilos()
+    //ProductsController.procesamientoHilos()
+    //AccidentesController.procesamientoHilos()
+
+    // --- Ejecucion de future ---
+    FutureController.procesarFutures()
 
     println("Cerrando App")
 }
