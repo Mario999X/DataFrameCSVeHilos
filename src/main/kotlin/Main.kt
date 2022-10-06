@@ -12,6 +12,7 @@ fun main() {
 
     // --- Ejecucion de los controladores ---
     //ProductsController.procesarCopiaProductos()
+    AccidentesController.momentoActual()
     //AccidentesController.procesarCopiasAccidentes()
 
     //AccidentesController.procesarConsultas()
@@ -24,7 +25,7 @@ fun main() {
     //FutureController.procesarFutures()
 
     // --- Ejecucion de graficas ---
-    AccidentesController.graficaGeneroConteo()
+    //AccidentesController.graficaGeneroConteo()
 
     println("Cerrando App")
 }

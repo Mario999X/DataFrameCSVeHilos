@@ -1,6 +1,5 @@
 package controllers
 
-import jetbrains.datalore.plot.PlotSvgExport
 import models.Accidente
 import models.LectorAccidentes
 import models.parse
@@ -11,12 +10,19 @@ import org.jetbrains.kotlinx.dataframe.io.writeCSV
 import org.jetbrains.letsPlot.Stat
 import org.jetbrains.letsPlot.export.ggsave
 import org.jetbrains.letsPlot.geom.geomBar
-import org.jetbrains.letsPlot.ggplot
+
 import org.jetbrains.letsPlot.intern.Plot
-import org.jetbrains.letsPlot.intern.toSpec
+
 import org.jetbrains.letsPlot.label.labs
 import org.jetbrains.letsPlot.letsPlot
 import java.io.File
+
+import java.time.LocalDateTime
+
+
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+
 import java.util.concurrent.Executors
 import kotlin.system.measureTimeMillis
 
@@ -26,9 +32,12 @@ object AccidentesController {
     private val workingDirectory: String = System.getProperty("user.dir")
     private val pathFile = workingDirectory + fs + "resources" + fs + "2022_Accidentalidad.csv"
 
-    // Para salvar en SVG
-    fun Plot.exportToSvg() = PlotSvgExport.buildSvgImageFromRawSpecs(this.toSpec())
-
+    fun momentoActual() {
+        val tiempo = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd mm yyyy, hh:mm:ss a"))
+        val tiempo2 = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm:ss a"))
+        println(tiempo)
+        println(tiempo2)
+    }
 
     fun procesarCopiasAccidentes() {
 
@@ -119,7 +128,7 @@ object AccidentesController {
     }
 
     // Graficas simples
-     fun graficaGeneroConteo(){
+    fun graficaGeneroConteo() {
         val fileToRead = parse(File(pathFile)).toDataFrame()
         fileToRead.cast<Accidente>()
 
@@ -129,18 +138,15 @@ object AccidentesController {
 
         // Grafico barras
         var fig: Plot = letsPlot(data = filtroGenero.toMap()) + geomBar(
-            stat = Stat.identity,
-            alpha = 1
+            stat = Stat.identity, alpha = 0.8
         ) {
             x = "sexo"; y = "total"
         } + labs(
-            x = "Sexo",
-            y = "Total",
-            title = "Total accidentes por sexo"
+            x = "Sexo", y = "Total", title = "Total accidentes por sexo"
         )
         ggsave(fig, "GraficoBarras.png")
 
-     }
+    }
 
 }
 
