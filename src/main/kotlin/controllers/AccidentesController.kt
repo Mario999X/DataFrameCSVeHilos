@@ -1,5 +1,6 @@
 package controllers
 
+import jetbrains.datalore.plot.PlotSvgExport
 import models.Accidente
 import models.LectorAccidentes
 import models.parse
@@ -7,6 +8,14 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.writeCSV
+import org.jetbrains.letsPlot.Stat
+import org.jetbrains.letsPlot.export.ggsave
+import org.jetbrains.letsPlot.geom.geomBar
+import org.jetbrains.letsPlot.ggplot
+import org.jetbrains.letsPlot.intern.Plot
+import org.jetbrains.letsPlot.intern.toSpec
+import org.jetbrains.letsPlot.label.labs
+import org.jetbrains.letsPlot.letsPlot
 import java.io.File
 import java.util.concurrent.Executors
 import kotlin.system.measureTimeMillis
@@ -16,6 +25,10 @@ object AccidentesController {
     private val fs = File.separator
     private val workingDirectory: String = System.getProperty("user.dir")
     private val pathFile = workingDirectory + fs + "resources" + fs + "2022_Accidentalidad.csv"
+
+    // Para salvar en SVG
+    fun Plot.exportToSvg() = PlotSvgExport.buildSvgImageFromRawSpecs(this.toSpec())
+
 
     fun procesarCopiasAccidentes() {
 
@@ -104,6 +117,30 @@ object AccidentesController {
             println("Tiempo $it ms")
         }
     }
+
+    // Graficas simples
+     fun graficaGeneroConteo(){
+        val fileToRead = parse(File(pathFile)).toDataFrame()
+        fileToRead.cast<Accidente>()
+
+        val filtroGenero = fileToRead.groupBy("sexo").aggregate {
+            count() into "total"
+        }
+
+        // Grafico barras
+        var fig: Plot = letsPlot(data = filtroGenero.toMap()) + geomBar(
+            stat = Stat.identity,
+            alpha = 1
+        ) {
+            x = "sexo"; y = "total"
+        } + labs(
+            x = "Sexo",
+            y = "Total",
+            title = "Total accidentes por sexo"
+        )
+        ggsave(fig, "GraficoBarras.png")
+
+     }
 
 }
 

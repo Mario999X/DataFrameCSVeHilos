@@ -41,7 +41,7 @@ fun parse(csvFile: File): List<Accidente> {
                 meteorologia = it[8],
                 tipoVehiculo = it[9],
                 tipoPersona = it[10],
-                sexo = it[12],
+                sexo = arreglarGenero(it[12]),
                 positivoAlcohol = it[17] == "S",
                 positivoDrogas = it[18] == "1"
             )
@@ -67,5 +67,12 @@ private fun getNumero(numero: String): Int {
     }
 
     return numero.toInt()
+}
+
+private fun arreglarGenero(sexo: String): String {
+    var sexo = sexo
+
+    sexo = if (sexo == "Hombre" || sexo == "Mujer" || sexo == "Desconocido") sexo else "Desconocido"
+    return sexo
 }
 

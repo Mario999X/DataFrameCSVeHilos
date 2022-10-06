@@ -37,17 +37,14 @@ object FutureController {
     private fun leerCSVEsperando() {
 
         val futureProducts = CompletableFuture.supplyAsync {
-            Thread.sleep(3000)
             println(doReadProducts()?.get().toString())
         }
 
         val futureAccidentes = CompletableFuture.supplyAsync {
-            Thread.sleep(2000)
             println(doReadAccidentes()?.get().toString())
         }
 
         val futureRandom = CompletableFuture.supplyAsync {
-            Thread.sleep(1000)
             doReadProducts()?.get() ?: throw Exception ("Error en productos")
             doReadAccidentes()?.get() ?: throw Exception("Error en accidentes")
             println(numRandom())

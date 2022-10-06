@@ -21,7 +21,10 @@ fun main() {
     //AccidentesController.procesamientoHilos()
 
     // --- Ejecucion de future ---
-    FutureController.procesarFutures()
+    //FutureController.procesarFutures()
+
+    // --- Ejecucion de graficas ---
+    AccidentesController.graficaGeneroConteo()
 
     println("Cerrando App")
 }
